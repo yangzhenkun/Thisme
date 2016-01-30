@@ -1,6 +1,7 @@
 package com.example.yasin.thisme.activity;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.gesture.GestureOverlayView;
 import android.os.Handler;
 import android.os.Message;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.example.yasin.thisme.R;
+import com.example.yasin.thisme.fragment.CardFragment;
 import com.example.yasin.thisme.fragment.MoreFragment;
 
 import me.drakeet.materialdialog.MaterialDialog;
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     android.support.v7.widget.Toolbar toolbar;
     private  GestureDetector mGestureDetector;
     private MoreFragment moreFragment;
+    private CardFragment cardFragment;
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -80,7 +83,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
             case R.id.card_btn:
                 setTitle("我的名片");
-              //  getSupportFragmentManager().beginTransaction().remove(MoreFragment).commit();
+                cardFragment = new CardFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_content,cardFragment).commit();
                 break;
             case R.id.friend_btn:
                 setTitle("联系人");
@@ -98,7 +102,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()){
-
+            case R.id.ab_add_me:
+                Intent toAddmeIntent = new Intent(this,CreateCardActivity.class);
+                startActivity(toAddmeIntent);
+                break;
         }
         return true;
     }
