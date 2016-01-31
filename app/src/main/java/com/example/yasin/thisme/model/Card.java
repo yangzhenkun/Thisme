@@ -4,16 +4,38 @@ import java.util.HashMap;
 
 /**
  * Created by Yasin on 2016/1/30.
+ * Card的shuxing为1时表示为用户自己创建的名片，为2时表示用户添加的别人的名片
+ * miaosu为card的描述
  */
 public class Card {
-    private String name,phoneNum,QQ,Weixin,Email,shuxing;
-    private HashMap<String,String> more;
+    private String name,phoneNum,QQ,Weixin,Email,shuxing,miaosu;
+    int cardId;
+    private String more;
 
-    public Card(String shuxing,String phoneNum, String QQ, String weixin, String email, HashMap<String, String> more, String name) {
+    public String getMiaosu() {
+        return miaosu;
+    }
+
+    public void setMiaosu(String miaosu) {
+        this.miaosu = miaosu;
+    }
+
+    public int getCardId() {
+        return cardId;
+    }
+
+    public void setCardId(int cardId) {
+        this.cardId = cardId;
+    }
+
+    public Card(int cardId,String miaosu,String shuxing,String phoneNum, String QQ, String weixin, String email, String more, String name) {
         this.shuxing = shuxing;
+        this.miaosu = miaosu;
+        this.cardId = cardId;
         this.phoneNum = phoneNum;
         this.QQ = QQ;
         Weixin = weixin;
+
         Email = email;
         this.more = more;
         this.name = name;
@@ -68,11 +90,11 @@ public class Card {
         Email = email;
     }
 
-    public HashMap<String, String> getMore() {
+    public String getMore() {
         return more;
     }
 
-    public void setMore(HashMap<String, String> more) {
+    public void setMore(String more) {
         this.more = more;
     }
 }
