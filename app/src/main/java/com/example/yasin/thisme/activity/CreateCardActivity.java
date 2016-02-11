@@ -27,7 +27,8 @@ public class CreateCardActivity extends AppCompatActivity implements View.OnClic
     private ThismeDB thismeDB;
     private EditText etName,etPhoneNum,etEamil,etQQ,etWeixin,etMiaosu;
     private Map<String,String> more = new HashMap<String,String>();
-    private int fillFlag=0;
+    private int fillFlag=1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
