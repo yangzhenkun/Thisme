@@ -25,6 +25,7 @@ import android.widget.Toolbar;
 
 import com.example.yasin.thisme.R;
 import com.example.yasin.thisme.fragment.CardFragment;
+import com.example.yasin.thisme.fragment.FriendFragment;
 import com.example.yasin.thisme.fragment.MoreFragment;
 
 import me.drakeet.materialdialog.MaterialDialog;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private  GestureDetector mGestureDetector;
     private MoreFragment moreFragment;
     private CardFragment cardFragment;
+    private FriendFragment friendFragment;
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -88,7 +90,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.friend_btn:
                 setTitle("联系人");
-              //  getSupportFragmentManager().beginTransaction().remove(MoreFragment).commit();
+                friendFragment = new FriendFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_content,friendFragment).commit();
                 break;
             case R.id.more_btn:
                 setTitle("更多");
