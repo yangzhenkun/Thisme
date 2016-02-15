@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.ab_add_me:
                 Intent toAddmeIntent = new Intent(this,CreateCardActivity.class);
                 startActivity(toAddmeIntent);
+                finish();
                 break;
         }
         return true;
