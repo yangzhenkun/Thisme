@@ -23,12 +23,13 @@ public class CreateCardActivity extends AppCompatActivity implements View.OnClic
 
     private Toolbar toolbar;
     private Button addBtn,cancelBtn,saveBtn;
-    private LinearLayout[] contentLinearLayout = new LinearLayout[30];
-    private int LinearLayoutCount=0;
+    private LinearLayout[] contentLinearLayout = new LinearLayout[50];
+    private EditText[] met = new EditText[50];
+    private EditText[] met2 = new EditText[50];
     private ThismeDB thismeDB;
     private EditText etName,etPhoneNum,etEamil,etQQ,etWeixin,etMiaosu;
     private Map<String,String> more = new HashMap<String,String>();
-    private int fillFlag=0,isFull=0;
+    private int fillFlag=0;
 
 
     @Override
@@ -70,14 +71,10 @@ public class CreateCardActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.create_card_more_btn:
-                if(fillFlag==0){
+                if(fillFlag<50){
                         addInformation();
                 }else{
-                    if(isFull==1){
-                        addInformation();
-                    }else{
-                        Toast.makeText(this,"请先填写完添加的内容在点击添加更多信息按钮",Toast.LENGTH_LONG).show();
-                    }
+                    Toast.makeText(this,"最多添加50条",Toast.LENGTH_LONG).show();
                 }
                 break;
             case R.id.create_card_cancel_btn:
@@ -94,7 +91,12 @@ public class CreateCardActivity extends AppCompatActivity implements View.OnClic
                 card.setQQ(etQQ.getText().toString());
                 card.setWeixin(etWeixin.getText().toString());
                 card.setMiaosu(etMiaosu.getText().toString());
+                for(int i=0;i<fillFlag;i++){
+                    more.put(met[i].getText().toString(),met2[i].getText().toString());
+                }
+                Log.e("yasin more",more.toString());
                 card.setMore(more.toString());
+                Log.e("cca",card.getEmail());
                 thismeDB = ThismeDB.getInsstance(this);
                 thismeDB.saveCard(card);
                 Toast.makeText(this,"名片已保存，可到名片出查看",Toast.LENGTH_SHORT).show();
@@ -106,44 +108,13 @@ public class CreateCardActivity extends AppCompatActivity implements View.OnClic
     }
     //动态添加内容
     private void addInformation() {
-            fillFlag++;
             LinearLayout container = (LinearLayout) findViewById(R.id.create_card_more_information);
-//            contentLinearLayout[LinearLayoutCount] = new LinearLayout(this);
-//            contentLinearLayout[LinearLayoutCount].setId(LinearLayoutCount);
-//            contentLinearLayout[LinearLayoutCount].setLayoutParams(new ViewGroup.LayoutParams(
-//                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//            contentLinearLayout[LinearLayoutCount].setOrientation(LinearLayout.HORIZONTAL);
-//            EditText met = new EditText(this);
-//            met.setHint("信息名");
-//            met.setId((LinearLayoutCount + 100));
-//            met.setLayoutParams(new ViewGroup.LayoutParams(
-//                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//            EditText met2 = new EditText(this);
-//            met2.setHint("信息内容");
-//            met2.setId((LinearLayoutCount + 200));
-//            met2.setLayoutParams(new ViewGroup.LayoutParams(
-//                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-           // contentLinearLayout[LinearLayoutCount].addView(met);
-            //contentLinearLayout[LinearLayoutCount].addView(met2);
-            // container.addView(contentLinearLayout[LinearLayoutCount]);
             contentLinearLayout[fillFlag] = (LinearLayout) getLayoutInflater().inflate(R.layout.more_item, container, false);
-             EditText met,met2;
-             met = (EditText) contentLinearLayout[fillFlag].findViewById(R.id.mycard_more_name);
-             met2 = (EditText) contentLinearLayout[fillFlag].findViewById(R.id.mycard_more_content);
+            met[fillFlag] = (EditText) contentLinearLayout[fillFlag].findViewById(R.id.mycard_more_name);
+            met2[fillFlag] = (EditText) contentLinearLayout[fillFlag].findViewById(R.id.mycard_more_content);
             container.addView(contentLinearLayout[fillFlag]);
-            String metS,met2S;
-            metS=met.getText().toString();
-            met2S=met2.getText().toString();
-            if(metS!=null&&met2S!=null){
-                Log.e("yasin",metS);
-                more.put(metS,met2S);
-                isFull=1;
-            }else{
-                isFull=0;
-            }
-
+            fillFlag++;
     }
-
 
     @Override
     public void onBackPressed() {

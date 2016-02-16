@@ -1,16 +1,33 @@
 package com.example.yasin.thisme.model;
 
-import java.util.HashMap;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
 
 /**
  * Created by Yasin on 2016/1/30.
  * Card的shuxing为1时表示为用户自己创建的名片，为2时表示用户添加的别人的名片
  * miaosu为card的描述
  */
-public class Card {
+public class Card implements Parcelable {
     private String name,phoneNum,QQ,Weixin,Email,shuxing,miaosu;
     int cardId;
     private String more;
+
+    protected Card(Parcel in) {
+        name = in.readString();
+        phoneNum = in.readString();
+        QQ = in.readString();
+        Weixin = in.readString();
+        Email = in.readString();
+        shuxing = in.readString();
+        miaosu = in.readString();
+        cardId = in.readInt();
+        more = in.readString();
+    }
+
+
 
     public String getMiaosu() {
         return miaosu;
@@ -35,7 +52,6 @@ public class Card {
         this.phoneNum = phoneNum;
         this.QQ = QQ;
         Weixin = weixin;
-
         Email = email;
         this.more = more;
         this.name = name;
@@ -96,5 +112,36 @@ public class Card {
 
     public void setMore(String more) {
         this.more = more;
+    }
+
+    public static final Creator<Card> CREATOR = new Creator<Card>() {
+        @Override
+        public Card createFromParcel(Parcel in) {
+            return new Card(in);
+        }
+
+        @Override
+        public Card[] newArray(int size) {
+            return new Card[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeString(name);
+        dest.writeString(phoneNum);
+        dest.writeString(QQ);
+        dest.writeString(Weixin);
+        dest.writeString(Email);
+        dest.writeString(shuxing);
+        dest.writeString(miaosu);
+        dest.writeInt(cardId);
+        dest.writeString(more);
     }
 }
