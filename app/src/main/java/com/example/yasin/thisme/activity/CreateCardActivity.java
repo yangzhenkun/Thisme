@@ -30,19 +30,26 @@ public class CreateCardActivity extends AppCompatActivity implements View.OnClic
     private EditText etName,etPhoneNum,etEamil,etQQ,etWeixin,etMiaosu;
     private Map<String,String> more = new HashMap<String,String>();
     private int fillFlag=0;
+    Intent intent2;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_card);
+        intent2 = getIntent();
         initLayout();
     }
 
     private void initLayout() {
         final Intent intent = new Intent(this,MainActivity.class);
         toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.activity_create_card_toolbar);
-        toolbar.setTitle("创建自己的名片");
+        if(intent2.getIntExtra("from",1)==1){
+            toolbar.setTitle("创建自己的名片");
+        }else{
+            toolbar.setTitle("添加朋友的名片");
+        }
+
         toolbar.setTitleTextColor(R.color.light_blue);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_keyboard_arrow_left_black_36dp);
@@ -84,7 +91,11 @@ public class CreateCardActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.create_card_save_btn:
                 Card card = new Card();
-                card.setShuxing("1");
+                if(intent2.getIntExtra("from",1)==1){
+                    card.setShuxing("1");
+                }else{
+                    card.setShuxing("2");
+                }
                 card.setName(etName.getText().toString());
                 card.setPhoneNum(etPhoneNum.getText().toString());
                 card.setEmail(etEamil.getText().toString());
@@ -99,7 +110,7 @@ public class CreateCardActivity extends AppCompatActivity implements View.OnClic
                 Log.e("cca",card.getEmail());
                 thismeDB = ThismeDB.getInsstance(this);
                 thismeDB.saveCard(card);
-                Toast.makeText(this,"名片已保存，可到名片出查看",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"名片已创建",Toast.LENGTH_SHORT).show();
                 Intent intent1 = new Intent(this,MainActivity.class);
                 startActivity(intent1);
                 finish();

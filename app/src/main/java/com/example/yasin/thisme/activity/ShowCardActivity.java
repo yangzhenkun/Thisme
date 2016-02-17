@@ -40,6 +40,7 @@ public class ShowCardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show_card);
         Intent intent = getIntent();
         mCard = intent.getParcelableExtra("card");
+        Log.e("Show","id="+mCard.getCardId());
 
         toolbar = (Toolbar) findViewById(R.id.activity_show_card_toolbar);
         toolbar.setTitle("名片详细信息");

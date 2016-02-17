@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.yasin.thisme.db.ThismeOpenHelper;
 
@@ -81,9 +82,9 @@ public class ThismeDB {
     }
     public List<Card> loadFriendCard(){
         List<Card> list = new ArrayList<Card>();
-        final String LOADMYCARD = "select * from Card"+
+        final String LOADFCARD = "select * from Card "+
                 "where shuxing=?";
-        Cursor cursor = db.rawQuery(LOADMYCARD,new String[]{"2"});
+        Cursor cursor = db.rawQuery(LOADFCARD,new String[]{"2"});
         if(cursor.moveToFirst()){
             do{
                 Card card = new Card();
@@ -102,19 +103,21 @@ public class ThismeDB {
         return list;
     }
     public void xiugaiCard(Card card){
-        if(card!=null){
             ContentValues values = new ContentValues();
-            values.put("shuxing",card.getShuxing());
-            values.put("name",card.getName());
+            values.put("shuxing", card.getShuxing());
+            values.put("name", card.getName());
+            Log.e("xiugai", card.getName());
             values.put("phonenum",card.getPhoneNum());
             values.put("email",card.getEmail());
             values.put("qq",card.getQQ());
             values.put("weixin",card.getWeixin());
             values.put("miaoshu", card.getMiaosu());
             values.put("more", card.getMore());
-            String temp = new String();
-            temp = "id="+String.valueOf(card.getCardId());
-            db.update("Card",values,temp,null);
-        }
+            String[] temp = {String.valueOf(card.getCardId())};
+            db.update("Card",values,"id=?",temp);
+//        String YJ = "UPDATE Card " +
+//                "SET name = '"+card.getName()+"' WHERE id="+card.getCardId();
+//        Log.e("xiugai",YJ);
+//        db.execSQL(YJ);
     }
 }

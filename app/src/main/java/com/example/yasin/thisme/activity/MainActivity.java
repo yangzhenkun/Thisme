@@ -106,11 +106,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()){
             case R.id.ab_add_me:
-                Intent toAddmeIntent = new Intent(this,CreateCardActivity.class);
-                startActivity(toAddmeIntent);
-                finish();
+                final Intent intent = new Intent(this,CreateCardActivity.class);
+                final MaterialDialog materialDialog = new MaterialDialog(this);
+                final LinearLayout contentLL = (LinearLayout) this.getLayoutInflater().inflate(R.layout.addcard_xuanxiang,null);
+                materialDialog.setCanceledOnTouchOutside(true)
+                        .setContentView(contentLL)
+                        .setTitle("选择添加名片方式")
+                        .setNegativeButton("否",new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                materialDialog.dismiss();
+                            }
+                        })
+                        .setPositiveButton("是", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                RadioButton addmeBtn = (RadioButton) contentLL.findViewById(R.id.addme);
+                                RadioButton addFriendBySD = (RadioButton) contentLL.findViewById(R.id.addfriend_sd);
+                                RadioButton addFriendBySS = (RadioButton) contentLL.findViewById(R.id.addfriend_ss);
+                                if (addmeBtn.isChecked()) {
+                                    intent.putExtra("from", 1);
+                                    startActivity(intent);
+                                    finish();
+                                } else if (addFriendBySD.isChecked()) {
+                                    intent.putExtra("from", 2);
+                                    startActivity(intent);
+                                    finish();
+                                } else if (addFriendBySS.isChecked()) {
+                                    Log.e("yasin", "扫一扫正在开发");
+                                    finish();
+                                } else {
+
+                                }
+                            }
+                        });
+                    materialDialog.show();
                 break;
-        }
+            }
         return true;
     }
 

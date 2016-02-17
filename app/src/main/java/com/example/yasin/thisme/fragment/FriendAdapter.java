@@ -13,19 +13,18 @@ import com.example.yasin.thisme.model.Card;
 
 import java.util.List;
 
-
 /**
- * Created by Yasin on 2016/2/15.
- * 用于CardFragment的Recyclerview
+ * Created by Yasin on 2016/2/17.
+ * 用于FriendFragment的Recyclerview
  */
-class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+class FriendAdapter extends RecyclerView.Adapter {
 
     private AppCompatActivity mContent;
     private List<Card> data;
 
-    private MyAdapterClickLitener myAdapterClickLitener;
+    private FriendAdapterClickLitener myAdapterClickLitener;
 
-    public MyAdapter(AppCompatActivity mContent,List<Card> list) {
+    public FriendAdapter(AppCompatActivity mContent,List<Card> list) {
         this.mContent = mContent;
         this.data = list;
     }
@@ -34,8 +33,8 @@ class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     * */
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ThismeViewHolder holder = new ThismeViewHolder(LayoutInflater.from(mContent)
-                .inflate(R.layout.mycard_card_view, parent,
+        FriendViewHolder holder = new FriendViewHolder(LayoutInflater.from(mContent)
+                .inflate(R.layout.friends_item, parent,
                         false));
         return holder;
     }
@@ -45,14 +44,14 @@ class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     * */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        final ThismeViewHolder vh = (ThismeViewHolder) holder;
+        final FriendViewHolder vh = (FriendViewHolder) holder;
         TextView tvName = vh.getTv(1);
-        TextView tvMiaosu = vh.getTv(2);
+        TextView tvNum = vh.getTv(2);
         Card mCard;
         mCard = data.get(position);
         tvName.setText(mCard.getName());
-        tvMiaosu.setText(mCard.getMiaosu());
-        Button shareBtn,editBtn,deleteBtn;
+        tvNum.setText(mCard.getPhoneNum());
+        Button MessageBtn,CallBtn,editBtn,deleteBtn;
         /*
         * 自己写ItemClickListener
         * */
@@ -64,15 +63,23 @@ class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                     myAdapterClickLitener.OnItemClick(vh.itemView,pos);
                 }
             });
-            shareBtn = vh.getBtn(1);
-            shareBtn.setOnClickListener(new View.OnClickListener() {
+            CallBtn = vh.getBtn(1);
+            CallBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int pos = vh.getLayoutPosition();
-                    myAdapterClickLitener.OnShareBtn(pos);
+                    myAdapterClickLitener.OnCallBtn(pos);
                 }
             });
-            editBtn = vh.getBtn(2);
+            MessageBtn = vh.getBtn(2);
+            MessageBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = vh.getLayoutPosition();
+                    myAdapterClickLitener.OnMessageBtn(pos);
+                }
+            });
+            editBtn = vh.getBtn(3);
             editBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -80,7 +87,7 @@ class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                     myAdapterClickLitener.OnEditBtn(pos);
                 }
             });
-            deleteBtn = vh.getBtn(3);
+            deleteBtn = vh.getBtn(4);
             deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -97,20 +104,21 @@ class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         return data.size();
     }
 
-    public void setOnItemClickLitener(MyAdapterClickLitener myAdapterClickLitener) {
+    public void setOnItemClickLitener(FriendAdapterClickLitener myAdapterClickLitener) {
         this.myAdapterClickLitener = myAdapterClickLitener;
     }
 
-    class ThismeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class FriendViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView tvName, tvMiaosu;
-        private Button shareBtn, editBtn, deleteBtn;
+        private TextView tvName, tvNum;
+        private Button CallBtn,MessageBtn, editBtn, deleteBtn;
 
-        public ThismeViewHolder(final View itemView) {
+        public FriendViewHolder(final View itemView) {
             super(itemView);
             tvName = (TextView) itemView.findViewById(R.id.mycard_name);
-            tvMiaosu = (TextView) itemView.findViewById(R.id.mycard_miaosu);
-            shareBtn = (Button) itemView.findViewById(R.id.mycard_share);
+            tvNum = (TextView) itemView.findViewById(R.id.friend_phone_num);
+            CallBtn = (Button) itemView.findViewById(R.id.call);
+            MessageBtn = (Button) itemView.findViewById(R.id.message);
             editBtn = (Button) itemView.findViewById(R.id.mycard_edit);
             deleteBtn = (Button) itemView.findViewById(R.id.mycard_delete);
         }
@@ -119,39 +127,33 @@ class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             if (flag == 1) {
                 return tvName;
             } else {
-                return tvMiaosu;
+                return tvNum;
             }
         }
 
         public Button getBtn(int flag){
             if(flag==1){
-                return shareBtn;
+                return CallBtn;
             }else if(flag==2){
+                return MessageBtn;
+            }else if(flag==3){
                 return editBtn;
             }else{
                 return deleteBtn;
             }
         }
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()){
-                case R.id.mycard_share:
-                    break;
-
-            }
-        }
     }
 
-    public interface MyAdapterClickLitener {
+    public interface FriendAdapterClickLitener {
         /*
         * 整个item的clicklitener
         * */
         void OnItemClick(View view, int position);
         /*
-        * sharebtn的clicklistener
+        * callbtn的clicklistener
         * */
-        void OnShareBtn(int position);
+        void OnCallBtn(int position);
+        void OnMessageBtn(int position);
         void OnEditBtn(int position);
         void OnDeleteBtn(int position);
     }
