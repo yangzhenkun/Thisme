@@ -94,7 +94,7 @@ public class ThismeDB {
                 card.setPhoneNum(cursor.getString(cursor.getColumnIndex("phonenum")));
                 card.setQQ(cursor.getString(cursor.getColumnIndex("qq")));
                 card.setWeixin(cursor.getString(cursor.getColumnIndex("weixin")));
-                card.setEmail(cursor.getString(cursor.getColumnIndex("shuxing")));
+                card.setEmail(cursor.getString(cursor.getColumnIndex("email")));
                 card.setShuxing("2");
                 card.setMiaosu(cursor.getString(cursor.getColumnIndex("miaoshu")));
                 card.setMore(cursor.getString(cursor.getColumnIndex("more")));
