@@ -1,12 +1,15 @@
 package com.example.yasin.thisme.activity;
 
 import android.app.Dialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.gesture.GestureOverlayView;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -51,16 +54,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
         mGestureDetector = new GestureDetector(this);
         LinearLayout ll=(LinearLayout)findViewById(R.id.main_layout);
         ll.setOnTouchListener(this);
         ll.setLongClickable(true);
+
         initLayout();
+        friendFragment = new FriendFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_content,friendFragment).commit();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu_friend, menu);
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.ab_search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
         return true;
     }
 
@@ -198,4 +213,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onLongPress(MotionEvent e) {
 
     }
+
+
 }

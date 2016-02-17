@@ -1,5 +1,6 @@
 package com.example.yasin.thisme.fragment;
 
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -40,8 +41,8 @@ public class FriendFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         thismeDB = ThismeDB.getInsstance(this.getActivity().getApplicationContext());
-        list = thismeDB.loadFriendCard();
         mContent = (AppCompatActivity) this.getActivity();
+        list = thismeDB.loadFriendCard();
         mRecyclerView = new RecyclerView(this.getActivity());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         mAdapter = new FriendAdapter(mContent,list);

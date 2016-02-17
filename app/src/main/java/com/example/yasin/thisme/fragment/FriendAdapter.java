@@ -17,7 +17,7 @@ import java.util.List;
  * Created by Yasin on 2016/2/17.
  * 用于FriendFragment的Recyclerview
  */
-class FriendAdapter extends RecyclerView.Adapter {
+public class FriendAdapter extends RecyclerView.Adapter {
 
     private AppCompatActivity mContent;
     private List<Card> data;

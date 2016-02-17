@@ -81,6 +81,7 @@ public class ThismeDB {
         return list;
     }
     public List<Card> loadFriendCard(){
+        Log.e("yasin","load");
         List<Card> list = new ArrayList<Card>();
         final String LOADFCARD = "select * from Card "+
                 "where shuxing=?";

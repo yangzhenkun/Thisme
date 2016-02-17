@@ -19,12 +19,12 @@
             android:icon="@drawable/ic_add_black_18dp"
             app:showAsAction="ifRoom"
             />
-        <item
-            android:id="@+id/ab_add_friend"
-            android:orderInCategory="70"
-            android:title="扫一扫"
-            android:icon="@drawable/ic_dashboard_black_18dp"
-            app:showAsAction="ifRoom"
-            />
+        <!--<item-->
+            <!--android:id="@+id/ab_add_friend"-->
+            <!--android:orderInCategory="70"-->
+            <!--android:title="扫一扫"-->
+            <!--android:icon="@drawable/ic_dashboard_black_18dp"-->
+            <!--app:showAsAction="ifRoom"-->
+            <!--/>-->
     </group>
 </menu>

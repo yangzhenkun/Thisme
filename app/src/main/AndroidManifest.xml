@@ -11,13 +11,31 @@
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".activity.SearchResultActivity"/>
         </activity>
-        <activity android:name=".activity.CreateCardActivity" />
-        <activity android:name=".activity.ShowCardActivity"></activity>
+        <activity android:name=".activity.CreateCardActivity" >
+
+        </activity>
+        <activity android:name=".activity.ShowCardActivity">
+
+        </activity>
         <activity android:name=".activity.EditCardActivity"/>
+        <activity android:name=".activity.SearchResultActivity"
+            android:parentActivityName=".activity.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity" />
+            <!-- meta tag and intent filter go into results activity -->
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>
