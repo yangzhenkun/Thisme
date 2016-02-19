@@ -36,6 +36,7 @@ import me.drakeet.materialdialog.MaterialDialog;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, android.support.v7.widget.Toolbar.OnMenuItemClickListener, View.OnTouchListener,
         GestureDetector.OnGestureListener {
 
+
     private RadioButton cardbtn,friendbtn,morebtn;
     android.support.v7.widget.Toolbar toolbar;
     private  GestureDetector mGestureDetector;
@@ -149,8 +150,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     startActivity(intent);
                                     finish();
                                 } else if (addFriendBySS.isChecked()) {
-                                    Log.e("yasin", "扫一扫正在开发");
-                                    finish();
+                                    //saoyisao
+                                    materialDialog.dismiss();
+//                                    Intent toScanIntent = new Intent(MainActivity.this, CaptureActivity.class);
+//                                    startActivity(toScanIntent);
                                 } else {
 
                                 }

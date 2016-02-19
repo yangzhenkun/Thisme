@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 
 import com.example.yasin.thisme.R;
 import com.example.yasin.thisme.activity.EditCardActivity;
+import com.example.yasin.thisme.activity.QRCodeActivity;
 import com.example.yasin.thisme.activity.ShowCardActivity;
 import com.example.yasin.thisme.model.Card;
 import com.example.yasin.thisme.model.ThismeDB;
@@ -61,6 +62,10 @@ public class CardFragment extends Fragment{
 
             @Override
             public void OnShareBtn(int position) {
+                Card mCard = list.get(position);
+                Intent intent = new Intent(mContent, QRCodeActivity.class);
+                intent.putExtra("card",mCard);
+                startActivity(intent);
             }
 
             @Override

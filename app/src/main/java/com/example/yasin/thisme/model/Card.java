@@ -15,6 +15,10 @@ public class Card implements Parcelable {
     int cardId;
     private String more;
 
+    public String toString(){
+        return "{"+name+"},{"+phoneNum+"},{"+Email+"},{"+QQ+"},{"+Weixin+"},{"+miaosu+"},"+more;
+    }
+
     protected Card(Parcel in) {
         name = in.readString();
         phoneNum = in.readString();

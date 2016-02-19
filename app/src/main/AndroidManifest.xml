@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.yasin.thisme">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,31 +17,35 @@
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data android:name="android.app.default_searchable"
-                android:value=".activity.SearchResultActivity"/>
-        </activity>
-        <activity android:name=".activity.CreateCardActivity" >
 
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".activity.SearchResultActivity" />
         </activity>
-        <activity android:name=".activity.ShowCardActivity">
-
-        </activity>
-        <activity android:name=".activity.EditCardActivity"/>
-        <activity android:name=".activity.SearchResultActivity"
+        <activity android:name=".activity.CreateCardActivity"></activity>
+        <activity android:name=".activity.ShowCardActivity"></activity>
+        <activity android:name=".activity.EditCardActivity" />
+        <activity
+            android:name=".activity.SearchResultActivity"
             android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
             <!-- meta tag and intent filter go into results activity -->
-            <meta-data android:name="android.app.searchable"
+            <meta-data
+                android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
+
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-
         </activity>
+        <activity android:name=".activity.QRCodeActivity" />
+        <activity android:name=".activity.ScanActivity"></activity>
+        <activity android:name="info.vividcode.android.zxing.CaptureActivity"/>
     </application>
 
 </manifest>
