@@ -44,8 +44,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.QRCodeActivity" />
+        <activity android:name=".activity.MipcaActivityCapture"/>
         <activity android:name=".activity.ScanActivity"></activity>
-        <activity android:name="info.vividcode.android.zxing.CaptureActivity"/>
     </application>
 
 </manifest>

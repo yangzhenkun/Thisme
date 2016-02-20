@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (item.getItemId()){
             case R.id.ab_add_me:
                 final Intent intent = new Intent(this,CreateCardActivity.class);
+                final Intent intent2 = new Intent();
                 final MaterialDialog materialDialog = new MaterialDialog(this);
                 final LinearLayout contentLL = (LinearLayout) this.getLayoutInflater().inflate(R.layout.addcard_xuanxiang,null);
                 materialDialog.setCanceledOnTouchOutside(true)
@@ -152,8 +153,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 } else if (addFriendBySS.isChecked()) {
                                     //saoyisao
                                     materialDialog.dismiss();
-//                                    Intent toScanIntent = new Intent(MainActivity.this, CaptureActivity.class);
-//                                    startActivity(toScanIntent);
+                                    intent2.setClass(MainActivity.this, MipcaActivityCapture.class);
+                                    intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivityForResult(intent2, 1);
                                 } else {
 
                                 }
@@ -216,6 +218,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onLongPress(MotionEvent e) {
 
     }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 1:
+                if(resultCode == RESULT_OK){
+                    Bundle bundle = data.getExtras();
+                    Log.e("sa",bundle.getString("result"));
+                }
+                break;
+        }
+    }
 
 }
