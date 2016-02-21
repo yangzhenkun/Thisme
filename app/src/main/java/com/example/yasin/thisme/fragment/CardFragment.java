@@ -74,6 +74,7 @@ public class CardFragment extends Fragment{
                 Intent intent = new Intent(mContent, EditCardActivity.class);
                 intent.putExtra("card",mCard);
                 startActivity(intent);
+                mContent.finish();
             }
 
             @Override

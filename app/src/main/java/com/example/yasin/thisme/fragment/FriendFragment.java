@@ -2,6 +2,7 @@ package com.example.yasin.thisme.fragment;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -57,12 +58,18 @@ public class FriendFragment extends Fragment{
 
             @Override
             public void OnCallBtn(int position) {
-                Log.e("yasin","call");
+                Card mCard = list.get(position);
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mCard.getPhoneNum()));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
 
             @Override
             public void OnMessageBtn(int position) {
-                Log.e("yasin","message");
+                Card mCard = list.get(position);
+                Uri smsToUri = Uri.parse("smsto:"+mCard.getPhoneNum());
+                Intent mIntent = new Intent( android.content.Intent.ACTION_SENDTO, smsToUri );
+                startActivity(mIntent);
             }
 
             @Override
@@ -71,6 +78,7 @@ public class FriendFragment extends Fragment{
                 Intent intent = new Intent(mContent, EditCardActivity.class);
                 intent.putExtra("card",mCard);
                 startActivity(intent);
+                mContent.finish();
             }
 
             @Override
