@@ -34,12 +34,14 @@ public class EditCardActivity extends AppCompatActivity implements View.OnClickL
         private Map<String,String> more = new HashMap<String,String>();
         private int fillFlag=0;
         Card mCard;
+        boolean fromScan;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_create_card);
             mCard = getIntent().getParcelableExtra("card");
+            fromScan = getIntent().getBooleanExtra("from",false);
             initLayout();
         }
 
@@ -115,7 +117,13 @@ public class EditCardActivity extends AppCompatActivity implements View.OnClickL
                     }
                     mCard.setMore(more.toString());
                     thismeDB = ThismeDB.getInsstance(this);
-                    thismeDB.xiugaiCard(mCard);
+
+                    if(fromScan){
+                        mCard.setShuxing("2");
+                        thismeDB.saveCard(mCard);
+                    }else{
+                        thismeDB.xiugaiCard(mCard);
+                    }
                     Toast.makeText(this,"名片已保存，可到名片出查看",Toast.LENGTH_SHORT).show();
                     Intent intent1 = new Intent(this,MainActivity.class);
                     startActivity(intent1);

@@ -30,6 +30,7 @@ import com.example.yasin.thisme.R;
 import com.example.yasin.thisme.fragment.CardFragment;
 import com.example.yasin.thisme.fragment.FriendFragment;
 import com.example.yasin.thisme.fragment.MoreFragment;
+import com.example.yasin.thisme.model.Card;
 
 import me.drakeet.materialdialog.MaterialDialog;
 
@@ -225,7 +226,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case 1:
                 if(resultCode == RESULT_OK){
                     Bundle bundle = data.getExtras();
-                    Log.e("sa",bundle.getString("result"));
+                    String[] content=bundle.getString("result").split("\\|");
+                    Card mCard = new Card();
+                    Log.e("yasin",bundle.getString("result"));
+                    String[][] temp = new String[content.length][];
+                    for(int i=0;i<content.length;i++){
+                        temp[i] = content[i].split("-");
+                    }
+                   if(temp[0].length>1){
+                       mCard.setName(temp[0][1]);
+                   }
+                    if(temp[1].length>1){
+                        mCard.setPhoneNum(temp[1][1]);
+                    }
+                    if(temp[2].length>1){
+                        mCard.setEmail(temp[2][1]);
+                    }
+                    if(temp[3].length>1){
+                        mCard.setQQ(temp[3][1]);
+                    }
+                    if(temp[4].length>1){
+                        mCard.setWeixin(temp[4][1]);
+                    }
+                    if(temp[5].length>1){
+                        mCard.setMiaosu(temp[5][1]);
+                    }
+                    if(temp[6].length>1){
+                        mCard.setMore(temp[6][1]);
+                    }
+                    Intent toE = new Intent(this,EditCardActivity.class);
+                    toE.putExtra("card",mCard);
+                    toE.putExtra("from",true);
+                    startActivity(toE);
                 }
                 break;
         }

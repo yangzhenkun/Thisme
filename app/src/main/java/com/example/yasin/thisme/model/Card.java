@@ -16,7 +16,7 @@ public class Card implements Parcelable {
     private String more;
 
     public String toString(){
-        return "{"+name+"},{"+phoneNum+"},{"+Email+"},{"+QQ+"},{"+Weixin+"},{"+miaosu+"},"+more;
+        return "name-"+name+"|phoneNum-"+phoneNum+"|Email-"+Email+"|QQ-"+QQ+"|Weixin-"+Weixin+"|miaosu-"+miaosu+"|more-"+more;
     }
 
     protected Card(Parcel in) {
