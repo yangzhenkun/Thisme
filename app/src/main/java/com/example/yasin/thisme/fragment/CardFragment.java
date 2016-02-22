@@ -12,13 +12,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.yasin.thisme.R;
 import com.example.yasin.thisme.activity.EditCardActivity;
 import com.example.yasin.thisme.activity.QRCodeActivity;
 import com.example.yasin.thisme.activity.ShowCardActivity;
 import com.example.yasin.thisme.model.Card;
 import com.example.yasin.thisme.model.ThismeDB;
+import com.example.yasin.thisme.model.User;
 
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -37,13 +45,17 @@ public class CardFragment extends Fragment{
     RecyclerView mRecyclerView;
     MyAdapter myAdapter;
     List<Card> list = new ArrayList<Card>();
+    User user;
+    RequestQueue mRequestQueue;
 
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         thismeDB = ThismeDB.getInsstance(this.getActivity().getApplicationContext());
+        user = User.getInsstance();
         list = thismeDB.loadMyCard();
         mContent = (AppCompatActivity) this.getActivity();
+        mRequestQueue = Volley.newRequestQueue(mContent);
 
         mRecyclerView = new RecyclerView(this.getActivity());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
@@ -56,7 +68,7 @@ public class CardFragment extends Fragment{
               * */
                 Card mCard = list.get(position);
                 Intent intent = new Intent(mContent, ShowCardActivity.class);
-                intent.putExtra("card",mCard);
+                intent.putExtra("card", mCard);
                 startActivity(intent);
             }
 
@@ -64,7 +76,7 @@ public class CardFragment extends Fragment{
             public void OnShareBtn(int position) {
                 Card mCard = list.get(position);
                 Intent intent = new Intent(mContent, QRCodeActivity.class);
-                intent.putExtra("card",mCard);
+                intent.putExtra("card", mCard);
                 startActivity(intent);
             }
 
@@ -72,7 +84,7 @@ public class CardFragment extends Fragment{
             public void OnEditBtn(int position) {
                 Card mCard = list.get(position);
                 Intent intent = new Intent(mContent, EditCardActivity.class);
-                intent.putExtra("card",mCard);
+                intent.putExtra("card", mCard);
                 startActivity(intent);
                 mContent.finish();
             }
@@ -90,6 +102,17 @@ public class CardFragment extends Fragment{
                                 list.remove(position);
                                 myAdapter.notifyItemRemoved(position);
                                 materialDialog.dismiss();
+                                StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://169.254.107.217:8080/day10/CServlet", new Response.Listener<String>() {
+                                    @Override
+                                    public void onResponse(String response) {
+
+                                    }
+                                }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+
+                                    }
+                                });
                             }
                         })
                         .setNegativeButton("否", new View.OnClickListener() {
@@ -99,7 +122,12 @@ public class CardFragment extends Fragment{
                             }
                         })
                         .setCanceledOnTouchOutside(true);
-                materialDialog.show();
+                if (user.isOnline()) {
+                    materialDialog.show();
+                }else{
+                    Toast.makeText(mContent,"请登录在操作",Toast.LENGTH_LONG).show();
+                }
+
             }
         });
         mRecyclerView.setAdapter(myAdapter);

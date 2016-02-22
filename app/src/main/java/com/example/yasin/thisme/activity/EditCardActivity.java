@@ -1,6 +1,8 @@
 package com.example.yasin.thisme.activity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,9 +13,16 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.yasin.thisme.R;
 import com.example.yasin.thisme.model.Card;
 import com.example.yasin.thisme.model.ThismeDB;
+import com.example.yasin.thisme.model.User;
 import com.example.yasin.thisme.utils.Utils;
 
 import java.util.HashMap;
@@ -35,11 +44,15 @@ public class EditCardActivity extends AppCompatActivity implements View.OnClickL
         private int fillFlag=0;
         Card mCard;
         boolean fromScan;
+        User user;
+        RequestQueue mRequestQueue;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_create_card);
+            user = User.getInsstance();
+            mRequestQueue = Volley.newRequestQueue(this);
             mCard = getIntent().getParcelableExtra("card");
             fromScan = getIntent().getBooleanExtra("from",false);
             initLayout();
@@ -121,8 +134,29 @@ public class EditCardActivity extends AppCompatActivity implements View.OnClickL
                     if(fromScan){
                         mCard.setShuxing("2");
                         thismeDB.saveCard(mCard);
+                        SharedPreferences mSharedPF = getSharedPreferences("friendcard", Activity.MODE_PRIVATE);
+                        int count = mSharedPF.getInt("count",0);
+                        count++;
+                        SharedPreferences.Editor editor = mSharedPF.edit();
+                        editor.putInt("count", count);
+                        editor.commit();
                     }else{
-                        thismeDB.xiugaiCard(mCard);
+                        if(user.isOnline()){
+                            thismeDB.xiugaiCard(mCard);
+                            StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://169.254.107.217:8080/day10/CServlet", new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+
+                                }
+                            });
+                        }else{
+                            Toast.makeText(this,"请登录后在修改名片",Toast.LENGTH_LONG).show();
+                        }
                     }
                     Toast.makeText(this,"名片已保存，可到名片出查看",Toast.LENGTH_SHORT).show();
                     Intent intent1 = new Intent(this,MainActivity.class);

@@ -9,10 +9,11 @@
         android:layout_marginTop="50dp"
         android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:orientation="horizontal">
 
         <ImageView
+            android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:id="@+id/login_img"
             android:src="@drawable/ic_account_box_red_300_36dp"
@@ -24,16 +25,16 @@
             android:layout_marginLeft="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="我"
+            android:text="登录"
             android:textSize="24sp"
-            android:textColor="@color/gray"
-            android:id="@+id/textView" />
+            android:textColor="#665757"
+            android:id="@+id/me_textView" />
 
         <ImageView
             android:src="@drawable/ic_keyboard_arrow_right_gray_36dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/textView"
+            android:layout_alignTop="@+id/me_textView"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
     </RelativeLayout>
@@ -42,10 +43,11 @@
         android:layout_marginTop="50dp"
         android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:orientation="horizontal">
 
         <ImageView
+            android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:id="@+id/shequ_img"
             android:src="@drawable/ic_star_border_yellow_700_36dp"
@@ -59,7 +61,7 @@
             android:layout_height="wrap_content"
             android:text="交友技巧"
             android:textSize="24sp"
-            android:textColor="@color/gray" />
+            android:textColor="#665757" />
 
         <ImageView
             android:src="@drawable/ic_keyboard_arrow_right_gray_36dp"
@@ -68,18 +70,17 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
     </RelativeLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dip"
-        android:background="@android:color/darker_gray" />
+
     <RelativeLayout
+        android:layout_marginTop="10dp"
         android:id="@+id/more_set"
         android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:orientation="horizontal">
 
         <ImageView
+            android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:id="@+id/set_img"
             android:src="@drawable/ic_settings_blue_700_36dp"
@@ -91,9 +92,9 @@
             android:layout_marginLeft="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="设置"
+            android:text="关于我们"
             android:textSize="24sp"
-            android:textColor="@color/gray"
+            android:textColor="#665757"
             />
 
         <ImageView

@@ -1,6 +1,8 @@
 package com.example.yasin.thisme.activity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -15,8 +17,11 @@ import android.widget.Toast;
 import com.example.yasin.thisme.R;
 import com.example.yasin.thisme.model.Card;
 import com.example.yasin.thisme.model.ThismeDB;
+import com.example.yasin.thisme.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CreateCardActivity extends AppCompatActivity implements View.OnClickListener{
@@ -31,6 +36,7 @@ public class CreateCardActivity extends AppCompatActivity implements View.OnClic
     private Map<String,String> more = new HashMap<String,String>();
     private int fillFlag=0;
     Intent intent2;
+    List<Card> list = new ArrayList<Card>();
 
 
     @Override
@@ -105,11 +111,28 @@ public class CreateCardActivity extends AppCompatActivity implements View.OnClic
                 for(int i=0;i<fillFlag;i++){
                     more.put(met[i].getText().toString(),met2[i].getText().toString());
                 }
-                Log.e("yasin more",more.toString());
                 card.setMore(more.toString());
-                Log.e("cca",card.getEmail());
                 thismeDB = ThismeDB.getInsstance(this);
                 thismeDB.saveCard(card);
+
+                if(intent2.getIntExtra("from",1)==1){
+                    //添加自己的名片
+                    SharedPreferences mSharedPF = getSharedPreferences("mycard", Activity.MODE_PRIVATE);
+                    int count = mSharedPF.getInt("count",0);
+                    count++;
+                    SharedPreferences.Editor editor = mSharedPF.edit();
+                    editor.putInt("count",count);
+                    editor.commit();
+                }else{
+                    SharedPreferences mSharedPF = getSharedPreferences("friendcard", Activity.MODE_PRIVATE);
+                    int count = mSharedPF.getInt("count",0);
+                    count++;
+                    SharedPreferences.Editor editor = mSharedPF.edit();
+                    editor.putInt("count",count);
+                    editor.commit();
+                }
+
+
                 Toast.makeText(this,"名片已创建",Toast.LENGTH_SHORT).show();
                 Intent intent1 = new Intent(this,MainActivity.class);
                 startActivity(intent1);

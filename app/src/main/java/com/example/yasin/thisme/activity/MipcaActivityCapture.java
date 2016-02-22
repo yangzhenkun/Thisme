@@ -31,6 +31,7 @@ import com.google.zxing.Result;
 /**
  * Initial the camera
  * @author Ryan.Tang
+ * 二维码扫描界面
  */
 public class MipcaActivityCapture extends Activity implements Callback {
 
