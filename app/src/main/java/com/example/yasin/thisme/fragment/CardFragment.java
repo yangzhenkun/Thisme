@@ -82,11 +82,16 @@ public class CardFragment extends Fragment{
 
             @Override
             public void OnEditBtn(int position) {
-                Card mCard = list.get(position);
-                Intent intent = new Intent(mContent, EditCardActivity.class);
-                intent.putExtra("card", mCard);
-                startActivity(intent);
-                mContent.finish();
+                if (user.isOnline()) {
+                    Card mCard = list.get(position);
+                    Intent intent = new Intent(mContent, EditCardActivity.class);
+                    intent.putExtra("card", mCard);
+                    startActivity(intent);
+                    mContent.finish();
+                }else{
+                    Toast.makeText(mContent,"请登录在操作",Toast.LENGTH_LONG).show();
+                }
+
             }
 
             @Override

@@ -117,18 +117,18 @@ public class CreateCardActivity extends AppCompatActivity implements View.OnClic
 
                 if(intent2.getIntExtra("from",1)==1){
                     //添加自己的名片
-                    SharedPreferences mSharedPF = getSharedPreferences("mycard", Activity.MODE_PRIVATE);
-                    int count = mSharedPF.getInt("count",0);
+                    SharedPreferences mSharedPF = getSharedPreferences("count", Activity.MODE_PRIVATE);
+                    int count = mSharedPF.getInt("mycard",0);
                     count++;
                     SharedPreferences.Editor editor = mSharedPF.edit();
-                    editor.putInt("count",count);
+                    editor.putInt("mycard",count);
                     editor.commit();
                 }else{
-                    SharedPreferences mSharedPF = getSharedPreferences("friendcard", Activity.MODE_PRIVATE);
-                    int count = mSharedPF.getInt("count",0);
+                    SharedPreferences mSharedPF = getSharedPreferences("count", Activity.MODE_PRIVATE);
+                    int count = mSharedPF.getInt("friendcard",0);
                     count++;
                     SharedPreferences.Editor editor = mSharedPF.edit();
-                    editor.putInt("count",count);
+                    editor.putInt("friendcard",count);
                     editor.commit();
                 }
 

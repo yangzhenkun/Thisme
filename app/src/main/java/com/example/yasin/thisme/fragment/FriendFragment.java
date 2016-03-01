@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.yasin.thisme.R;
 import com.example.yasin.thisme.activity.EditCardActivity;
@@ -21,6 +22,7 @@ import com.example.yasin.thisme.activity.MainActivity;
 import com.example.yasin.thisme.activity.ShowCardActivity;
 import com.example.yasin.thisme.model.Card;
 import com.example.yasin.thisme.model.ThismeDB;
+import com.example.yasin.thisme.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,12 +39,14 @@ public class FriendFragment extends Fragment{
     RecyclerView mRecyclerView;
     FriendAdapter mAdapter;
     List<Card> list = new ArrayList<Card>();
+    User user;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         thismeDB = ThismeDB.getInsstance(this.getActivity().getApplicationContext());
         mContent = (AppCompatActivity) this.getActivity();
+        user = User.getInsstance();
         list = thismeDB.loadFriendCard();
         mRecyclerView = new RecyclerView(this.getActivity());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
@@ -52,7 +56,7 @@ public class FriendFragment extends Fragment{
             public void OnItemClick(View view, int position) {
                 Card mCard = list.get(position);
                 Intent intent = new Intent(mContent, ShowCardActivity.class);
-                intent.putExtra("card",mCard);
+                intent.putExtra("card", mCard);
                 startActivity(intent);
             }
 
@@ -67,43 +71,53 @@ public class FriendFragment extends Fragment{
             @Override
             public void OnMessageBtn(int position) {
                 Card mCard = list.get(position);
-                Uri smsToUri = Uri.parse("smsto:"+mCard.getPhoneNum());
-                Intent mIntent = new Intent( android.content.Intent.ACTION_SENDTO, smsToUri );
+                Uri smsToUri = Uri.parse("smsto:" + mCard.getPhoneNum());
+                Intent mIntent = new Intent(android.content.Intent.ACTION_SENDTO, smsToUri);
                 startActivity(mIntent);
             }
 
             @Override
             public void OnEditBtn(int position) {
-                Card mCard = list.get(position);
-                Intent intent = new Intent(mContent, EditCardActivity.class);
-                intent.putExtra("card",mCard);
-                startActivity(intent);
-                mContent.finish();
+                if (user.isOnline()) {
+                    Card mCard = list.get(position);
+                    Intent intent = new Intent(mContent, EditCardActivity.class);
+                    intent.putExtra("card", mCard);
+                    startActivity(intent);
+                    mContent.finish();
+                } else {
+                    Toast.makeText(mContent, "请登录在操作", Toast.LENGTH_LONG).show();
+                }
+
             }
 
             @Override
             public void OnDeleteBtn(final int position) {
-                final MaterialDialog materialDialog = new MaterialDialog(mContent);
-                LinearLayout nullLayout = (LinearLayout) mContent.getLayoutInflater().inflate(R.layout.null_layout, null);
-                materialDialog.setTitle("是否删除")
-                        .setContentView(nullLayout)
-                        .setPositiveButton("是", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                thismeDB.deleteCard(list.get(position).getCardId());
-                                list.remove(position);
-                                mAdapter.notifyItemRemoved(position);
-                                materialDialog.dismiss();
-                            }
-                        })
-                        .setNegativeButton("否", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                materialDialog.dismiss();
-                            }
-                        })
-                        .setCanceledOnTouchOutside(true);
-                materialDialog.show();
+                if (user.isOnline()) {
+                    final MaterialDialog materialDialog = new MaterialDialog(mContent);
+                    LinearLayout nullLayout = (LinearLayout) mContent.getLayoutInflater().inflate(R.layout.null_layout, null);
+                    materialDialog.setTitle("是否删除")
+                            .setContentView(nullLayout)
+                            .setPositiveButton("是", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    thismeDB.deleteCard(list.get(position).getCardId());
+                                    list.remove(position);
+                                    mAdapter.notifyItemRemoved(position);
+                                    materialDialog.dismiss();
+                                }
+                            })
+                            .setNegativeButton("否", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    materialDialog.dismiss();
+                                }
+                            })
+                            .setCanceledOnTouchOutside(true);
+                    materialDialog.show();
+                } else {
+                    Toast.makeText(mContent, "请登录在操作", Toast.LENGTH_LONG).show();
+                }
+
             }
         });
         mRecyclerView.setAdapter(mAdapter);
