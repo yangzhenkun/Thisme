@@ -1,5 +1,6 @@
 package com.example.yasin.thisme.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.yasin.thisme.R;
+import com.example.yasin.thisme.activity.GuideActivity;
 import com.example.yasin.thisme.activity.RegistActivity;
 import com.example.yasin.thisme.activity.UserActivity;
 import com.example.yasin.thisme.model.User;
@@ -39,7 +41,7 @@ import me.drakeet.materialdialog.MaterialDialog;
 public class MoreFragment extends Fragment implements View.OnClickListener{
 
     User user;
-    RelativeLayout meLayout;
+    RelativeLayout meLayout,talkLayout,aboutLayout,instructionLayout;
     AppCompatActivity mContent;
     RequestQueue mRequestQueue;
     TextView meTv;
@@ -66,6 +68,12 @@ public class MoreFragment extends Fragment implements View.OnClickListener{
         meLayout = (RelativeLayout) root.findViewById(R.id.more_me);
         meLayout.setOnClickListener(this);
         meTv = (TextView) root.findViewById(R.id.me_textView);
+        talkLayout = (RelativeLayout) root.findViewById(R.id.more_jyjq);
+        talkLayout.setOnClickListener(this);
+        aboutLayout = (RelativeLayout) root.findViewById(R.id.more_set);
+        aboutLayout.setOnClickListener(this);
+        instructionLayout = (RelativeLayout) root.findViewById(R.id.more_instruction);
+        instructionLayout.setOnClickListener(this);
     }
 
     @Override
@@ -132,7 +140,25 @@ public class MoreFragment extends Fragment implements View.OnClickListener{
                 }
 
             break;
-
+            case R.id.more_jyjq:
+                MaterialDialog materialDialog1 = new MaterialDialog(mContent);
+                materialDialog1.setCanceledOnTouchOutside(true)
+                        .setTitle("交友技巧")
+                        .setMessage("还未上线，敬请期待!");
+                materialDialog1.show();
+                break;
+            case R.id.more_set:
+                MaterialDialog materialDialog = new MaterialDialog(mContent);
+                materialDialog.setCanceledOnTouchOutside(true)
+                        .setTitle("关于我们")
+                        .setMessage("Power by 闷声发大财");
+                materialDialog.show();
+                break;
+            case R.id.more_instruction:
+                Intent intent = new Intent(mContent, GuideActivity.class);
+                intent.putExtra("fromInstruction",true);
+                startActivity(intent);
+                break;
         }
     }
 }

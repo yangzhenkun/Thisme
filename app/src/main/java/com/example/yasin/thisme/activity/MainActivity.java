@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.gesture.GestureOverlayView;
 import android.os.Handler;
 import android.os.Message;
@@ -51,13 +52,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
     };
+    private long exitTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        SharedPreferences pref = getSharedPreferences("first",MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean("status", false);
+        editor.commit();
 
         mGestureDetector = new GestureDetector(this);
         LinearLayout ll=(LinearLayout)findViewById(R.id.main_layout);
@@ -260,6 +265,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(toE);
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(System.currentTimeMillis()-exitTime>2000){
+            Toast.makeText(this,"再按一次退出程序",Toast.LENGTH_SHORT).show();
+            exitTime=System.currentTimeMillis();
+        }else{
+            finish();
+            System.exit(0);
         }
     }
 
