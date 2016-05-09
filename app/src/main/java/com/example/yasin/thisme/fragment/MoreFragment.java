@@ -174,6 +174,7 @@ public class MoreFragment extends Fragment implements View.OnClickListener{
                                                     user.setId(phoneNum);
                                                     user.setToken(response.getString("token"));
                                                     Toast.makeText(mContent,"登录成功",Toast.LENGTH_LONG).show();
+                                                    meTv.setText(phoneNum);
                                                 }else{
                                                     Log.e("yasin","post3");
                                                     user.setIsOnline(false);

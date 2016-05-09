@@ -122,4 +122,8 @@ public class ThismeDB {
             db.update("Card",values,"id=?",temp);
 
     }
+
+    public void delete(){
+        db.delete("Card",null,null);
+    }
 }

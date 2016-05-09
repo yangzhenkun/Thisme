@@ -25,10 +25,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.ByteArrayEntity;
+import cz.msebera.android.httpclient.message.BasicHeader;
+import cz.msebera.android.httpclient.protocol.HTTP;
 
 
 public class RegistActivity extends Activity implements OnClickListener {
@@ -75,14 +79,41 @@ public class RegistActivity extends Activity implements OnClickListener {
 //                    Toast.makeText(this, "姓名不为空或长度不超过20", Toast.LENGTH_SHORT).show();
 //                    return ;
 //                }
-                AsyncHttpClient clent = new AsyncHttpClient();
+                AsyncHttpClient client = new AsyncHttpClient();
                 final String url = Utils.baseUrl+"regist.html";
+//                JSONObject jsonObject = new JSONObject();
+//                try {
+//                    jsonObject.put("username",etPhoneNumber.getText());
+//                    jsonObject.put("password",etPassword.getText());
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//                ByteArrayEntity entity = null;
+//                try {
+//                    entity = new ByteArrayEntity(jsonObject.toString().getBytes("UTF-8"));
+//                    entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+//                } catch (UnsupportedEncodingException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                client.post(mContext,url,entity,"application/json",new JsonHttpResponseHandler(){
+//                    @Override
+//                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+//                        super.onSuccess(statusCode, headers, response);
+//                        Log.e("rs",response.toString());
+//                    }
+//
+//                    @Override
+//                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+//                        super.onFailure(statusCode, headers, throwable, errorResponse);
+//                    }
+//                });
+
+
                 final RequestParams params = new RequestParams();
                 params.put("username",etPhoneNumber.getText());
                 params.put("password",etPassword.getText());
-                clent.post(url,params,new JsonHttpResponseHandler(){
-
-
+                client.post(url,params,new JsonHttpResponseHandler(){
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);

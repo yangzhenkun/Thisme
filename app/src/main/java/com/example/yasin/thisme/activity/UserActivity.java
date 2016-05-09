@@ -1,5 +1,6 @@
 package com.example.yasin.thisme.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -11,15 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.yasin.thisme.R;
 import com.example.yasin.thisme.model.Card;
 import com.example.yasin.thisme.model.ThismeDB;
@@ -33,12 +25,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TooManyListenersException;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.ByteArrayEntity;
+import cz.msebera.android.httpclient.message.BasicHeader;
+import cz.msebera.android.httpclient.protocol.HTTP;
 import me.drakeet.materialdialog.MaterialDialog;
 
 public class UserActivity extends AppCompatActivity implements View.OnClickListener{
@@ -49,6 +48,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     User user;
     AppCompatActivity mContext;
     ThismeDB thismeDB;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +104,8 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 public void onClick(View v) {
                     materialDialog.dismiss();
                 }
-            }).show();
+            });
+        //}).show();
         }
     }
 
@@ -115,14 +116,45 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.user_download:
+                showProgrssDialog();
+                thismeDB.delete();
                 String url = Utils.baseUrl+"getallcard.html";
+                AsyncHttpClient client = new AsyncHttpClient();
                 RequestParams params = new RequestParams();
                 params.put("username",user.getId());
                 params.put("token",user.getToken());
-                AsyncHttpClient client = new AsyncHttpClient();
+//                JSONObject params = new JSONObject();
+//                try {
+//                    params.put("username",user.getId());
+//                    params.put("token",user.getToken());
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//
+//
+//                ByteArrayEntity entity = null;
+//                try {
+//                    entity = new ByteArrayEntity(params.toString().getBytes("UTF-8"));
+//                    entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+//                } catch (UnsupportedEncodingException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                client.post(mContext,url,entity,"application/json",new JsonHttpResponseHandler(){
+//                    @Override
+//                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+//                        super.onSuccess(statusCode, headers, response);
+//                        Log.e("rs",response.toString());
+//                    }
+//
+//                    @Override
+//                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+//                        super.onFailure(statusCode, headers, throwable, errorResponse);
+//                    }
+//                });
+
+
                 client.post(url,params,new JsonHttpResponseHandler(){
-
-
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
@@ -135,11 +167,15 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                                     thismeDB.saveCard(mCard);
                                     Log.e("card",mCard.toString());
                                 }
+                                Toast.makeText(mContext,"同步成功",Toast.LENGTH_LONG).show();
+                                closeProgressDialog();
                             }else{
-                                Toast.makeText(mContext,"下载失败",Toast.LENGTH_LONG).show();
+                                Toast.makeText(mContext,"同步失败",Toast.LENGTH_LONG).show();
+                                closeProgressDialog();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            closeProgressDialog();
                         }
                     }
 
@@ -147,6 +183,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
                         Toast.makeText(mContext,"网络错误",Toast.LENGTH_LONG).show();
+                        closeProgressDialog();
                     }
                 });
                 break;
@@ -161,6 +198,27 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.user_advice:
                 break;
+        }
+    }
+
+
+    /*
+      * 显示进度对话框
+      * */
+    private void showProgrssDialog(){
+        if(progressDialog == null){
+            progressDialog = new ProgressDialog(mContext);
+            progressDialog.setMessage("正在同步");
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+        progressDialog.show();
+    }
+    /*
+    * 关闭对话框
+    * */
+    private void closeProgressDialog(){
+        if(progressDialog != null){
+            progressDialog.dismiss();
         }
     }
 }

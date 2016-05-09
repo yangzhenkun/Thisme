@@ -25,10 +25,18 @@ import com.example.yasin.thisme.activity.ShowCardActivity;
 import com.example.yasin.thisme.model.Card;
 import com.example.yasin.thisme.model.ThismeDB;
 import com.example.yasin.thisme.model.User;
+import com.example.yasin.thisme.utils.Utils;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cz.msebera.android.httpclient.Header;
 import me.drakeet.materialdialog.MaterialDialog;
 
 /**
@@ -105,9 +113,43 @@ public class FriendFragment extends Fragment{
                             .setPositiveButton("是", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    thismeDB.deleteCard(list.get(position).getCardId());
-                                    list.remove(position);
-                                    mAdapter.notifyItemRemoved(position);
+
+
+                                    String url = Utils.baseUrl+"deletecard.html";
+
+                                    AsyncHttpClient client = new AsyncHttpClient();
+                                    RequestParams params = new RequestParams();
+                                    params.put("username",user.getId());
+                                    params.put("token",user.getToken());
+                                    params.put("cardid",list.get(position).getCardIdFromS());
+                                    client.post(url,params,new JsonHttpResponseHandler(){
+                                        @Override
+                                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                            super.onSuccess(statusCode, headers, response);
+                                            try {
+                                                if(response.getString("status").equals("0")){
+                                                    thismeDB.deleteCard(list.get(position).getCardId());
+                                                    list.remove(position);
+                                                    mAdapter.notifyItemRemoved(position);
+                                                    Toast.makeText(mContent,"删除成功",Toast.LENGTH_SHORT).show();
+                                                }else{
+                                                    Toast.makeText(mContent,"删除失败",Toast.LENGTH_SHORT).show();
+                                                }
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                            super.onFailure(statusCode, headers, throwable, errorResponse);
+                                            Toast.makeText(mContent,"网络错误",Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+
+
+
                                     materialDialog.dismiss();
                                 }
                             })
