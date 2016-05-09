@@ -142,13 +142,80 @@ public class EditCardActivity extends AppCompatActivity implements View.OnClickL
 
                     if(fromScan){
                         mCard.setShuxing("2");
-                        thismeDB.saveCard(mCard);
-                        SharedPreferences mSharedPF = getSharedPreferences("count", Activity.MODE_PRIVATE);
-                        int count = mSharedPF.getInt("friendcard",0);
-                        count++;
-                        SharedPreferences.Editor editor = mSharedPF.edit();
-                        editor.putInt("friendcard", count);
-                        editor.commit();
+                        AsyncHttpClient client = new AsyncHttpClient();
+                        RequestParams params = new RequestParams();
+                        params.put("username",user.getId());
+                        params.put("token", user.getToken());
+                        params.put("cardinf", Utils.Card2JsonString(mCard));
+                        String url = Utils.baseUrl+"addcard.html";
+                        client.post(url,params,new JsonHttpResponseHandler(){
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                                super.onSuccess(statusCode, headers, response);
+                                Log.e("yasin1",response.toString());
+                            }
+
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                                super.onSuccess(statusCode, headers, responseString);
+                                Log.e("yasin2",responseString);
+                            }
+
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                super.onSuccess(statusCode, headers, response);
+                                try {
+                                    Log.e("yasin",response.toString());
+                                    if(response.getString("status").equals("0")){
+                                        //得到cardID
+                                        mCard.setCardIdFromS(response.getString("cardid"));
+                                        //Log.e("card",card.toString());
+                                        thismeDB.saveCard(mCard);
+                                        Toast.makeText(mContext,"名片已添加",Toast.LENGTH_SHORT).show();
+                                        Intent intent1 = new Intent(mContext,MainActivity.class);
+                                        startActivity(intent1);
+                                        finish();
+                                    }else{
+                                        Log.e("yasin","failue");
+                                        Toast.makeText(mContext,"保存失败",Toast.LENGTH_LONG).show();
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                super.onFailure(statusCode, headers, throwable, errorResponse);
+                                Toast.makeText(mContext,"网络错误",Toast.LENGTH_SHORT).show();
+                                Log.e("yasin","failue");
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                                super.onFailure(statusCode, headers, throwable, errorResponse);
+                                Log.e("yasin",errorResponse.toString());
+                                Log.e("status",statusCode+"");
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                super.onFailure(statusCode, headers, responseString, throwable);
+                                Log.e("yasin",responseString);
+                                Log.e("status",statusCode+"");
+                            }
+                        });
+  //                      thismeDB.saveCard(mCard);
+//                        SharedPreferences mSharedPF = getSharedPreferences("count", Activity.MODE_PRIVATE);
+//                        int count = mSharedPF.getInt("friendcard",0);
+//                        count++;
+//                        SharedPreferences.Editor editor = mSharedPF.edit();
+//                        editor.putInt("friendcard", count);
+//                        editor.commit();
+                        Toast.makeText(mContext,"名片已保存，可到名片出查看",Toast.LENGTH_SHORT).show();
+                        Intent intent1 = new Intent(mContext,MainActivity.class);
+                        startActivity(intent1);
+                        finish();
                     }else{
                         AsyncHttpClient client = new AsyncHttpClient();
                         String url = Utils.baseUrl+"updatecard.html";
@@ -165,7 +232,7 @@ public class EditCardActivity extends AppCompatActivity implements View.OnClickL
                                 try {
                                     if (response.getString("status").equals("0")) {
                                         thismeDB.xiugaiCard(mCard);
-                                        Toast.makeText(mContext,"名片已保存，可到名片出查看",Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(mContext,"名片已保存，可到名片出查看",Toast.LENGTH_SHORT).show();
                                         Intent intent1 = new Intent(mContext,MainActivity.class);
                                         startActivity(intent1);
                                         finish();
