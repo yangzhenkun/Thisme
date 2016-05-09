@@ -21,7 +21,8 @@ public class ThismeOpenHelper extends SQLiteOpenHelper{
             "qq text," +
             "weixin text," +
             "miaoshu text,"+
-            "more text)";
+            "more text,"+
+            "cardIdFromS text)";
     public ThismeOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }

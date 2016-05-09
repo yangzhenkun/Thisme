@@ -14,15 +14,32 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.yasin.thisme.R;
 import com.example.yasin.thisme.model.Card;
 import com.example.yasin.thisme.model.ThismeDB;
+import com.example.yasin.thisme.model.User;
 import com.example.yasin.thisme.utils.Utils;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cz.msebera.android.httpclient.Header;
 
 public class CreateCardActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -35,15 +52,20 @@ public class CreateCardActivity extends AppCompatActivity implements View.OnClic
     private EditText etName,etPhoneNum,etEamil,etQQ,etWeixin,etMiaosu;
     private Map<String,String> more = new HashMap<String,String>();
     private int fillFlag=0;
+    private AppCompatActivity context;
     Intent intent2;
     List<Card> list = new ArrayList<Card>();
+    User user;
+    private AppCompatActivity mContext;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_card);
+        mContext = this;
         intent2 = getIntent();
+        user = User.getInsstance();
         initLayout();
     }
 
@@ -96,7 +118,7 @@ public class CreateCardActivity extends AppCompatActivity implements View.OnClic
                 finish();
                 break;
             case R.id.create_card_save_btn:
-                Card card = new Card();
+                final Card card = new Card();
                 if(intent2.getIntExtra("from",1)==1){
                     card.setShuxing("1");
                 }else{
@@ -113,7 +135,6 @@ public class CreateCardActivity extends AppCompatActivity implements View.OnClic
                 }
                 card.setMore(more.toString());
                 thismeDB = ThismeDB.getInsstance(this);
-                thismeDB.saveCard(card);
 
                 if(intent2.getIntExtra("from",1)==1){
                     //添加自己的名片
@@ -131,12 +152,71 @@ public class CreateCardActivity extends AppCompatActivity implements View.OnClic
                     editor.putInt("friendcard",count);
                     editor.commit();
                 }
+                AsyncHttpClient client = new AsyncHttpClient();
+                RequestParams params = new RequestParams();
+                params.put("username",user.getId());
+                params.put("token", user.getToken());
+                params.put("cardinf", Utils.Card2JsonString(card));
+                Log.e("cardinf",params.toString());
+                String url = Utils.baseUrl+"addcard.html";
+                client.post(url,params,new JsonHttpResponseHandler(){
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                        super.onSuccess(statusCode, headers, response);
+                        Log.e("yasin1",response.toString());
+                    }
 
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                        super.onSuccess(statusCode, headers, responseString);
+                        Log.e("yasin2",responseString);
+                    }
 
-                Toast.makeText(this,"名片已创建",Toast.LENGTH_SHORT).show();
-                Intent intent1 = new Intent(this,MainActivity.class);
-                startActivity(intent1);
-                finish();
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                        try {
+                            Log.e("yasin",response.toString());
+                            if(response.getString("status").equals("0")){
+                                //得到cardID
+                                card.setCardIdFromS(response.getString("cardid"));
+                                Log.e("card",card.toString());
+                                thismeDB.saveCard(card);
+                                Toast.makeText(mContext,"名片已创建",Toast.LENGTH_SHORT).show();
+                                Intent intent1 = new Intent(mContext,MainActivity.class);
+                                startActivity(intent1);
+                                finish();
+                            }else{
+                                Log.e("yasin","failue");
+                                Toast.makeText(mContext,"保存失败",Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        super.onFailure(statusCode, headers, throwable, errorResponse);
+                        Toast.makeText(mContext,"网络错误",Toast.LENGTH_SHORT).show();
+                        Log.e("yasin","failue");
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                        super.onFailure(statusCode, headers, throwable, errorResponse);
+                        Log.e("yasin",errorResponse.toString());
+                        Log.e("status",statusCode+"");
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        super.onFailure(statusCode, headers, responseString, throwable);
+                        Log.e("yasin",responseString);
+                        Log.e("status",statusCode+"");
+                    }
+                });
+
                 break;
         }
     }

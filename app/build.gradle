@@ -31,4 +31,5 @@ dependencies {
     compile 'com.google.zxing:javase:3.2.1'
     compile 'com.google.zxing:core:3.2.1'
     compile 'eu.the4thfloor.volley:com.android.volley:2015.05.28'
+    compile 'com.loopj.android:android-async-http:1.4.9'
 }

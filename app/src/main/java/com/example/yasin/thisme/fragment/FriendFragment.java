@@ -4,6 +4,8 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -44,12 +46,15 @@ public class FriendFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+
         thismeDB = ThismeDB.getInsstance(this.getActivity().getApplicationContext());
         mContent = (AppCompatActivity) this.getActivity();
         user = User.getInsstance();
         list = thismeDB.loadFriendCard();
+
         mRecyclerView = new RecyclerView(this.getActivity());
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        LinearLayoutManager mLLm = new LinearLayoutManager(this.getActivity());
+        mRecyclerView.setLayoutManager(mLLm);
         mAdapter = new FriendAdapter(mContent,list);
         mAdapter.setOnItemClickLitener(new FriendAdapter.FriendAdapterClickLitener() {
             @Override
@@ -121,6 +126,8 @@ public class FriendFragment extends Fragment{
             }
         });
         mRecyclerView.setAdapter(mAdapter);
+
+        Log.e("yasin",String.valueOf(mLLm.findLastVisibleItemPosition()));
         return mRecyclerView;
     }
 

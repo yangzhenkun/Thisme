@@ -14,12 +14,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.yasin.thisme.R;
 import com.example.yasin.thisme.activity.EditCardActivity;
 import com.example.yasin.thisme.activity.QRCodeActivity;
@@ -27,6 +21,13 @@ import com.example.yasin.thisme.activity.ShowCardActivity;
 import com.example.yasin.thisme.model.Card;
 import com.example.yasin.thisme.model.ThismeDB;
 import com.example.yasin.thisme.model.User;
+import com.example.yasin.thisme.utils.Utils;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cz.msebera.android.httpclient.Header;
 import me.drakeet.materialdialog.MaterialDialog;
 
 /**
@@ -46,7 +48,6 @@ public class CardFragment extends Fragment{
     MyAdapter myAdapter;
     List<Card> list = new ArrayList<Card>();
     User user;
-    RequestQueue mRequestQueue;
 
     @Nullable
     @Override
@@ -55,7 +56,6 @@ public class CardFragment extends Fragment{
         user = User.getInsstance();
         list = thismeDB.loadMyCard();
         mContent = (AppCompatActivity) this.getActivity();
-        mRequestQueue = Volley.newRequestQueue(mContent);
 
         mRecyclerView = new RecyclerView(this.getActivity());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
@@ -103,19 +103,36 @@ public class CardFragment extends Fragment{
                         .setPositiveButton("是", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                thismeDB.deleteCard(list.get(position).getCardId());
-                                list.remove(position);
-                                myAdapter.notifyItemRemoved(position);
-                                materialDialog.dismiss();
-                                StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://169.254.107.217:8080/day10/CServlet", new Response.Listener<String>() {
-                                    @Override
-                                    public void onResponse(String response) {
+                                String url = Utils.baseUrl+"deletecard.html";
 
+                                AsyncHttpClient client = new AsyncHttpClient();
+                                RequestParams params = new RequestParams();
+                                params.put("username",user.getId());
+                                params.put("token",user.getToken());
+                                params.put("cardid",list.get(position).getCardIdFromS());
+                                client.post(url,params,new JsonHttpResponseHandler(){
+                                    @Override
+                                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                        super.onSuccess(statusCode, headers, response);
+                                        try {
+                                            if(response.getString("status").equals("0")){
+                                                thismeDB.deleteCard(list.get(position).getCardId());
+                                                list.remove(position);
+                                                myAdapter.notifyItemRemoved(position);
+                                                materialDialog.dismiss();
+                                                Toast.makeText(mContent,"删除成功",Toast.LENGTH_SHORT).show();
+                                            }else{
+                                                Toast.makeText(mContent,"删除失败",Toast.LENGTH_SHORT).show();
+                                            }
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
-                                }, new Response.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
 
+                                    @Override
+                                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                        super.onFailure(statusCode, headers, throwable, errorResponse);
+                                        Toast.makeText(mContent,"网络错误",Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }

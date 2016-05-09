@@ -52,11 +52,12 @@ public class ThismeDB {
             values.put("weixin",card.getWeixin());
             values.put("miaoshu",card.getMiaosu());
             values.put("more",card.getMore());
+            values.put("cardIdFromS",card.getCardIdFromS());
             db.insert("Card",null,values);
         }
     }
-    public void deleteCard(int cardId){
-        final String DELETECARD = "delete from card where id="+String.valueOf(cardId);
+    public void deleteCard(String cardId){
+        final String DELETECARD = "delete from card where id="+cardId;
         db.execSQL(DELETECARD);
     }
     public List<Card> loadMyCard(){
@@ -66,7 +67,8 @@ public class ThismeDB {
         if(cursor.moveToFirst()){
             do{
                 Card card = new Card();
-                card.setCardId(cursor.getInt(cursor.getColumnIndex("id")));
+                card.setCardId(cursor.getString(cursor.getColumnIndex("id")));
+                card.setCardIdFromS(cursor.getString(cursor.getColumnIndex("cardIdFromS")));
                 card.setName(cursor.getString(cursor.getColumnIndex("name")));
                 card.setPhoneNum(cursor.getString(cursor.getColumnIndex("phonenum")));
                 card.setQQ(cursor.getString(cursor.getColumnIndex("qq")));
@@ -89,8 +91,9 @@ public class ThismeDB {
         if(cursor.moveToFirst()){
             do{
                 Card card = new Card();
-                card.setCardId(cursor.getInt(cursor.getColumnIndex("id")));
+                card.setCardId(cursor.getString(cursor.getColumnIndex("id")));
                 card.setName(cursor.getString(cursor.getColumnIndex("name")));
+                card.setCardIdFromS(cursor.getString(cursor.getColumnIndex("cardIdFromS")));
                 card.setPhoneNum(cursor.getString(cursor.getColumnIndex("phonenum")));
                 card.setQQ(cursor.getString(cursor.getColumnIndex("qq")));
                 card.setWeixin(cursor.getString(cursor.getColumnIndex("weixin")));
@@ -108,6 +111,7 @@ public class ThismeDB {
             values.put("shuxing", card.getShuxing());
             values.put("name", card.getName());
             Log.e("xiugai", card.getName());
+            values.put("cardIdFromS",card.getCardIdFromS());
             values.put("phonenum",card.getPhoneNum());
             values.put("email",card.getEmail());
             values.put("qq",card.getQQ());
@@ -116,9 +120,6 @@ public class ThismeDB {
             values.put("more", card.getMore());
             String[] temp = {String.valueOf(card.getCardId())};
             db.update("Card",values,"id=?",temp);
-//        String YJ = "UPDATE Card " +
-//                "SET name = '"+card.getName()+"' WHERE id="+card.getCardId();
-//        Log.e("xiugai",YJ);
-//        db.execSQL(YJ);
+
     }
 }

@@ -24,9 +24,18 @@ import com.example.yasin.thisme.model.Card;
 import com.example.yasin.thisme.model.ThismeDB;
 import com.example.yasin.thisme.model.User;
 import com.example.yasin.thisme.utils.Utils;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by Yasin on 2016/2/17.
@@ -44,14 +53,16 @@ public class EditCardActivity extends AppCompatActivity implements View.OnClickL
         private int fillFlag=0;
         Card mCard;
         boolean fromScan;
-        RequestQueue mRequestQueue;
+        private AppCompatActivity mContext;
+        private User user;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_create_card);
-            mRequestQueue = Volley.newRequestQueue(this);
+            mContext = this;
             mCard = getIntent().getParcelableExtra("card");
+            user = User.getInsstance();
             fromScan = getIntent().getBooleanExtra("from",false);
             initLayout();
         }
@@ -139,12 +150,54 @@ public class EditCardActivity extends AppCompatActivity implements View.OnClickL
                         editor.putInt("friendcard", count);
                         editor.commit();
                     }else{
-                            thismeDB.xiugaiCard(mCard);
+                        AsyncHttpClient client = new AsyncHttpClient();
+                        String url = Utils.baseUrl+"updatecard.html";
+                        RequestParams params = new RequestParams();
+                        params.put("username",user.getId());
+                        params.put("token",user.getToken());
+                        params.put("cardid",mCard.getCardIdFromS());
+                        params.put("cardinf", Utils.Card2JsonString(mCard));
+                        Log.e("painf",params.toString());
+                        client.post(url, params, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                super.onSuccess(statusCode, headers, response);
+                                try {
+                                    if (response.getString("status").equals("0")) {
+                                        thismeDB.xiugaiCard(mCard);
+                                        Toast.makeText(mContext,"名片已保存，可到名片出查看",Toast.LENGTH_SHORT).show();
+                                        Intent intent1 = new Intent(mContext,MainActivity.class);
+                                        startActivity(intent1);
+                                        finish();
+                                        Toast.makeText(mContext, "修改成功", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        Toast.makeText(mContext,"修改失败",Toast.LENGTH_LONG).show();
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                super.onFailure(statusCode, headers, throwable, errorResponse);
+                                Toast.makeText(mContext, "网络错误", Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                                super.onFailure(statusCode, headers, throwable, errorResponse);
+                                Log.e("err",""+statusCode);
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                super.onFailure(statusCode, headers, responseString, throwable);
+                                Log.e("err",""+statusCode);
+                            }
+                        });
+
                     }
-                    Toast.makeText(this,"名片已保存，可到名片出查看",Toast.LENGTH_SHORT).show();
-                    Intent intent1 = new Intent(this,MainActivity.class);
-                    startActivity(intent1);
-                    finish();
                     break;
             }
         }

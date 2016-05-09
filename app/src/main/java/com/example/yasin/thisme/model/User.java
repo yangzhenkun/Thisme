@@ -6,7 +6,16 @@ package com.example.yasin.thisme.model;
 public class User {
     private boolean isOnline = false;
     private String id;
+    private String token;
     static private User user;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     private User(){
 

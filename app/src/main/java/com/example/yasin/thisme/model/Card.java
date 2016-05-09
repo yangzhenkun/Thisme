@@ -3,6 +3,9 @@ package com.example.yasin.thisme.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.JsonReader;
+
+import org.json.JSONObject;
 
 
 /**
@@ -12,11 +15,20 @@ import android.os.Parcelable;
  */
 public class Card implements Parcelable {
     private String name,phoneNum,QQ,Weixin,Email,shuxing,miaosu;
-    int cardId;
+    private String cardId,cardIdFromS;
+
+    public String getCardIdFromS() {
+        return cardIdFromS;
+    }
+
+    public void setCardIdFromS(String cardIdFromS) {
+        this.cardIdFromS = cardIdFromS;
+    }
+
     private String more;
 
     public String toString(){
-        return "name-"+name+"|phoneNum-"+phoneNum+"|Email-"+Email+"|QQ-"+QQ+"|Weixin-"+Weixin+"|miaosu-"+miaosu+"|more-"+more;
+        return "name-"+name+"|phoneNum-"+phoneNum+"|Email-"+Email+"|QQ-"+QQ+"|Weixin-"+Weixin+"|miaosu-"+miaosu+"|more-"+more+"|cardIdFromS-"+cardIdFromS;
     }
 
     protected Card(Parcel in) {
@@ -27,11 +39,10 @@ public class Card implements Parcelable {
         Email = in.readString();
         shuxing = in.readString();
         miaosu = in.readString();
-        cardId = in.readInt();
+        cardId = in.readString();
         more = in.readString();
+        cardIdFromS = in.readString();
     }
-
-
 
     public String getMiaosu() {
         return miaosu;
@@ -41,18 +52,18 @@ public class Card implements Parcelable {
         this.miaosu = miaosu;
     }
 
-    public int getCardId() {
+    public String getCardId() {
         return cardId;
     }
 
-    public void setCardId(int cardId) {
+    public void setCardId(String cardId) {
         this.cardId = cardId;
     }
 
-    public Card(int cardId,String miaosu,String shuxing,String phoneNum, String QQ, String weixin, String email, String more, String name) {
+    public Card(String miaosu,String shuxing,String phoneNum, String QQ, String weixin, String email, String more, String name,String cardIdFromS) {
+        this.cardIdFromS = cardIdFromS;
         this.shuxing = shuxing;
         this.miaosu = miaosu;
-        this.cardId = cardId;
         this.phoneNum = phoneNum;
         this.QQ = QQ;
         Weixin = weixin;
@@ -145,7 +156,9 @@ public class Card implements Parcelable {
         dest.writeString(Email);
         dest.writeString(shuxing);
         dest.writeString(miaosu);
-        dest.writeInt(cardId);
+        dest.writeString(cardId);
         dest.writeString(more);
+        dest.writeString(cardIdFromS);
     }
+
 }
