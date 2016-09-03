@@ -30,6 +30,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -113,19 +114,31 @@ public class FriendFragment extends Fragment{
                             .setPositiveButton("是", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-
-
                                     String url = Utils.baseUrl+"deletecard.html";
-
                                     AsyncHttpClient client = new AsyncHttpClient();
                                     RequestParams params = new RequestParams();
                                     params.put("username",user.getId());
                                     params.put("token",user.getToken());
                                     params.put("cardid",list.get(position).getCardIdFromS());
+                                    Log.e("yasin",params.toString());
                                     client.post(url,params,new JsonHttpResponseHandler(){
+
+                                        @Override
+                                        public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                                            super.onSuccess(statusCode, headers, response);
+                                            Log.e("yasin1",response.toString());
+                                        }
+
+                                        @Override
+                                        public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                                            super.onSuccess(statusCode, headers, responseString);
+                                            Log.e("yasin2",responseString);
+                                        }
+
                                         @Override
                                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                             super.onSuccess(statusCode, headers, response);
+                                            Log.e("yasin",response.toString());
                                             try {
                                                 if(response.getString("status").equals("0")){
                                                     thismeDB.deleteCard(list.get(position).getCardId());
@@ -145,10 +158,22 @@ public class FriendFragment extends Fragment{
                                             super.onFailure(statusCode, headers, throwable, errorResponse);
                                             Toast.makeText(mContent,"网络错误",Toast.LENGTH_SHORT).show();
                                         }
+
+
+                                        @Override
+                                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                                            super.onFailure(statusCode, headers, throwable, errorResponse);
+                                            Log.e("yasin",errorResponse.toString());
+                                            Log.e("status",statusCode+"");
+                                        }
+
+                                        @Override
+                                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                            super.onFailure(statusCode, headers, responseString, throwable);
+                                            Log.e("yasin",responseString);
+                                            Log.e("status",statusCode+"");
+                                        }
                                     });
-
-
-
 
                                     materialDialog.dismiss();
                                 }

@@ -17,8 +17,8 @@ import java.util.List;
  */
 public class Utils {
 
-   // public static final String baseUrl = "http://10.1.104.6:16666/ccard/";
-   public static final String baseUrl = "http://115.159.73.94/ccard/";
+   // public static final String baseUrl = "http://115.159.73.94/ccard/;
+   public static final String baseUrl = "http://123.206.75.21:16666/ccard/";
     static public String[] HashMapString2StringArray(String data){
 
         String[] datas;

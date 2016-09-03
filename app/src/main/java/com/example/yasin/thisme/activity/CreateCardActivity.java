@@ -154,6 +154,7 @@ public class CreateCardActivity extends AppCompatActivity implements View.OnClic
                 }
                 AsyncHttpClient client = new AsyncHttpClient();
                 RequestParams params = new RequestParams();
+                params.setContentEncoding("utf-8");
                 params.put("username",user.getId());
                 params.put("token", user.getToken());
                 params.put("cardinf", Utils.Card2JsonString(card));

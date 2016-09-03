@@ -33,6 +33,11 @@ public class QRCodeActivity extends AppCompatActivity{
         setContentView(R.layout.qrcode_layout);
 
         cardContent = getIntent().getParcelableExtra("card").toString();
+        try {
+            cardContent = new String(cardContent.getBytes("utf-8"), "ISO-8859-1");
+        }catch(Exception e){
+
+        }
 
         toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.activity_create_card_toolbar);
 

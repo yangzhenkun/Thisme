@@ -1,6 +1,8 @@
 package com.example.yasin.thisme.activity;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.Vector;
 
 import android.app.Activity;
@@ -13,6 +15,7 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -117,6 +120,8 @@ public class MipcaActivityCapture extends Activity implements Callback {
 		inactivityTimer.onActivity();
 		playBeepSoundAndVibrate();
 		String resultString = result.getText();
+		resultString = recode(resultString);
+
 		if (resultString.equals("")) {
 			Toast.makeText(MipcaActivityCapture.this, "Scan failed!", Toast.LENGTH_SHORT).show();
 		}else {
@@ -222,5 +227,25 @@ public class MipcaActivityCapture extends Activity implements Callback {
 			mediaPlayer.seekTo(0);
 		}
 	};
+
+	private String recode(String str) {
+		String formart = "";
+
+		try {
+			boolean ISO = Charset.forName("ISO-8859-1").newEncoder()
+					.canEncode(str);
+			if (ISO) {
+				formart = new String(str.getBytes("ISO-8859-1"), "utf-8");
+				Log.e("yasin","yes");
+			} else {
+				formart = str;
+				Log.e("yasin","no");
+			}
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return formart;
+	}
 
 }

@@ -110,10 +110,12 @@ public class CardFragment extends Fragment{
                                 params.put("username",user.getId());
                                 params.put("token",user.getToken());
                                 params.put("cardid",list.get(position).getCardIdFromS());
+                                Log.e("yasin-s",params.toString());
                                 client.post(url,params,new JsonHttpResponseHandler(){
                                     @Override
                                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                         super.onSuccess(statusCode, headers, response);
+                                        Log.e("yasin",response.toString());
                                         try {
                                             if(response.getString("status").equals("0")){
                                                 thismeDB.deleteCard(list.get(position).getCardId());

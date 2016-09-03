@@ -231,6 +231,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case 1:
                 if(resultCode == RESULT_OK){
                     Bundle bundle = data.getExtras();
+                    Log.e("yasin-s",bundle.getString("result"));
                     String[] content=bundle.getString("result").split("\\|");
                     Card mCard = new Card();
                     Log.e("yasin",bundle.getString("result"));
